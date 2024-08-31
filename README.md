@@ -59,7 +59,10 @@ cd weather-monitoring-system
 
 ### 2. Настройка Kafka
 
-kafka-topics.sh --create --topic weather --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+1. Запустить docker-compose.yml
+
+2. Создаем топик
+    kafka-topics.sh --create --topic weather --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
 ### 3. Запуск сервисов
 
