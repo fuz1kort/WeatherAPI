@@ -1,5 +1,7 @@
 ﻿using Confluent.Kafka;
 using Grpc.Net.Client;
+using Microsoft.Extensions.Options;
+using Service_B.Configurations;
 using Service_B.Interfaces;
 using WeatherService;
 
@@ -9,23 +11,26 @@ public class WeatherConsumer : IWeatherConsumer
 {
     private readonly IConsumer<Null, string> _consumer;
     private readonly Weather.WeatherClient _grpcClient;
+    private readonly KafkaOptions _kafkaOptions;
 
-    public WeatherConsumer()
+    public WeatherConsumer(IOptions<KafkaOptions> kafkaOptions, IOptions<ExternalServicesOptions> externalServicesOptions)
     {
+        _kafkaOptions = kafkaOptions.Value;
+        var externalServicesOptions1 = externalServicesOptions.Value;
         var config = new ConsumerConfig
         {
-            GroupId = "weather-consumer-group",
-            BootstrapServers = "localhost:9092",
-            AutoOffsetReset = AutoOffsetReset.Earliest
+            GroupId = _kafkaOptions.GroupId,
+            BootstrapServers = _kafkaOptions.BootstrapServers,
+            AutoOffsetReset = Enum.Parse<AutoOffsetReset>(_kafkaOptions.AutoOffsetReset, ignoreCase: true)
         };
 
         _consumer = new ConsumerBuilder<Null, string>(config).Build();
-        _grpcClient = new Weather.WeatherClient(GrpcChannel.ForAddress("https://localhost:7031"));
+        _grpcClient = new Weather.WeatherClient(GrpcChannel.ForAddress(externalServicesOptions1.ServiceC.BaseUrl));
     }
 
     public async Task ConsumeAsync(CancellationToken cancellationToken)
     {
-        _consumer.Subscribe("weather");
+        _consumer.Subscribe(_kafkaOptions.WeatherTopic);
 
         while (!cancellationToken.IsCancellationRequested)
         {

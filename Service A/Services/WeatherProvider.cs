@@ -1,16 +1,18 @@
-﻿using Service_A.Interfaces;
+﻿using Microsoft.Extensions.Options;
+using Service_A.Configurations;
+using Service_A.Interfaces;
 
 namespace Service_A.Services;
 
-public class WeatherProvider(HttpClient httpClient) : IWeatherProvider
+public class WeatherProvider(IOptions<WeatherApiOptions> weatherApiOptions, HttpClient httpClient)
+    : IWeatherProvider
 {
-    private const string ApiKey = "9143fcde774db2b32947bf720db3d4d2";
-    private const string City = "Kazan";
+    private readonly WeatherApiOptions _weatherApiOptions = weatherApiOptions.Value;
 
     public async Task<string> GetWeatherAsync()
     {
-        const string url = $"http://api.openweathermap.org/data/2.5/weather?q={City}&appid={ApiKey}";
-        var response = await httpClient.GetAsync(url);
+        var requestUri = $"{_weatherApiOptions.BaseUrl}?q={_weatherApiOptions.City}&appid={_weatherApiOptions.ApiKey}";
+        var response = await httpClient.GetAsync(requestUri);
 
         if (response.IsSuccessStatusCode)
             return await response.Content.ReadAsStringAsync();

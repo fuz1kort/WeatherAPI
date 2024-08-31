@@ -3,5 +3,5 @@
 public interface IWeatherStorage
 {
     void AddWeatherData(string data);
-    List<(string weatherJson, DateTime timestamp)> GetLastWeatherData();
+    IEnumerable<(string weatherJson, DateTime timestamp)> GetLastWeatherData();
 }

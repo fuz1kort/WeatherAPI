@@ -1,3 +1,4 @@
+using Service_A.Configurations;
 using Service_A.Interfaces;
 using Service_A.Services;
 
@@ -9,6 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
+builder.Services.Configure<WeatherApiOptions>(builder.Configuration.GetSection("WeatherApi"));
+builder.Services.Configure<KafkaOptions>(builder.Configuration.GetSection("Kafka"));
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IWeatherProvider, WeatherProvider>();
 builder.Services.AddSingleton<IKafkaProducer>(sp => new KafkaProducer("localhost:9092"));

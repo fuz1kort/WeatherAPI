@@ -1,8 +1,10 @@
 using Service_C.Data;
+using Service_C.Interfaces;
 using Service_C.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpc();
+builder.Services.AddScoped<IWeatherService, Service_C.Services.WeatherService>();
 builder.Services.AddSingleton<IWeatherStorage, WeatherStorage>();
 builder.Services.AddControllers();
 

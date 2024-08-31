@@ -1,3 +1,4 @@
+using Service_B.Configurations;
 using Service_B.Interfaces;
 using Service_B.Services;
 
@@ -9,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.Configure<KafkaOptions>(builder.Configuration.GetSection("Kafka"));
+builder.Services.Configure<ExternalServicesOptions>(builder.Configuration.GetSection("ExternalServices"));
 builder.Services.AddSingleton<IWeatherConsumer, WeatherConsumer>();
 builder.Services.AddHostedService<WeatherConsumerService>();
 

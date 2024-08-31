@@ -10,6 +10,6 @@ public class WeatherStorage : IWeatherStorage
         if (_weatherDataQueue.Count > 10) _weatherDataQueue.Dequeue();
     }
 
-    public List<(string weatherJson, DateTime timestamp)> GetLastWeatherData() 
+    public IEnumerable<(string weatherJson, DateTime timestamp)> GetLastWeatherData() 
         => _weatherDataQueue.ToList();
 }
