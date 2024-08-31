@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "WeatherService";
+
+service Weather {
+  rpc SetWeather (SetWeatherRequest) returns (SetWeatherResponse);
+}
+
+message SetWeatherRequest {
+  string weatherJson = 1;
+}
+
+message SetWeatherResponse {
+  string message = 1;
+}
